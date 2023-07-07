@@ -28,4 +28,4 @@ Before using CineSnap, ensure that you have the following installed on your syst
 Contributions to CineSnap are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
 
 ## License
-CineSnap is open source and available under the **MIT License**.
+CineSnap is open source and available under the **GPL-3.0 License**.
