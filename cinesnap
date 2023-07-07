@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Check if FFmpeg is installed
+command -v ffmpeg >/dev/null 2>&1 || { echo >&2 "FFmpeg is required but not installed. Aborting."; exit 1; }
+
+# Check if a video file and extraction interval are provided as arguments
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <video_file> <interval>"
+  echo "Example: $0 path/to/video.mp4 5"
+  exit 1
+fi
+
+# Get the video file name without extension
+filename=$(basename "$1")
+dirname="${filename%.*}"
+
+# Create the directory if it doesn't exist
+mkdir -p "$dirname"
+
+# Check if frames exist in the output directory
+existing_frames=$(find "$dirname" -name "frame_*.jpg" | wc -l)
+if [ "$existing_frames" -gt 0 ]; then
+  echo "Frames already exist in the directory: $dirname"
+  last_frame_path=$(find "$dirname" -name "frame_*.jpg" | sort -r | head -n 1)
+  last_frame_number=$(basename "$last_frame_path" | grep -oP "[0-9]+(?=\.)")
+  num_frames_extracted=$((last_frame_number + 1))
+  echo "Resuming extraction from frame $num_frames_extracted"
+else
+  num_frames_extracted=0
+  echo "Starting extraction from the beginning"
+fi
+
+# Use FFmpeg to get video duration and calculate the number of frames
+duration=$(ffmpeg -hide_banner -i "$1" 2>&1 | grep "Duration" | awk '{print $2}')
+seconds=$(echo "$duration" | awk -F: '{print ($1 * 3600) + ($2 * 60) + $3}')
+frame_rate=$(ffmpeg -hide_banner -i "$1" 2>&1 | grep "Stream" | grep -oP "[0-9]+(?=\sfps)")
+total_num_frames=$((seconds / $2 * frame_rate))
+
+echo "Number of frames to be extracted: $total_num_frames"
+
+# Calculate the starting time for resuming the video extraction
+starting_time=$((num_frames_extracted * $2))
+
+# Use FFmpeg to extract frames based on the provided interval
+ffmpeg -hide_banner -loglevel warning -ss "$starting_time" -i "$1" -vf fps=1/$2 -start_number "$num_frames_extracted" "$dirname/frame_%04d.jpg"
+
+echo "Frames extracted successfully in the directory: $dirname"
