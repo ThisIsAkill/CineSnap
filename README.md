@@ -11,7 +11,7 @@ Before using CineSnap, ensure that you have the following installed on your syst
 
 1. Clone the CineSnap repository to your local machine:
    ```bash
-   git clone https://github.com/thisisakille/CineSnap.git
+   git clone https://github.com/thisisakill/CineSnap.git
 2. Navigate to the CineSnap directory:
    ```bash
    cd CineSnap
