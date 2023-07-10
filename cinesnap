@@ -13,7 +13,7 @@ fi
 
 # Get the video file name without extension
 filename=$(basename "$1")
-dirname="/home/thisisakill/Media/Movies/${filename%.*}"
+dirname="/path/to/video/${filename%.*}"
 
 # Create the directory structure if it doesn't exist
 mkdir -p "$dirname"
