@@ -32,15 +32,23 @@ Before using CineSnap, ensure that you have the following installed on your syst
    ```bash
    cd CineSnap
    ```
-3. Make the shell script executable:
+3. Change the output directory path:
+   ```bash
+   dirname="/path/to/output/directory/${filename%.*}"
+   ```
+   Example:
+   ```bash
+   dirname="/home/thisisakill/Media/Movies/${filename%.*}"
+   ```
+4. Make the shell script executable:
    ```bash
    chmod +x cinesnap
    ```
-4. Run the script with the video file path and the desired extraction interval (in seconds) as arguments:
+5. Run the script with the video file path and the desired extraction interval (in seconds) as arguments:
    ```bash
    ./cinesnap <video_file> [-ts <interval> | -tsfile <timestamps_file>]
    ```
-5. The extracted frames will be saved in a directory named after the video file (without the extension) within the CineSnap repository.
+6. The extracted frames will be saved in a directory named after the video file (without the extension) within the CineSnap repository.
 
 ## Examples
 
